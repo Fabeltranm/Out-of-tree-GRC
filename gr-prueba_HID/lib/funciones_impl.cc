@@ -121,7 +121,7 @@ namespace gr {
     funciones_impl::prueba(float serial_data)
         {
          devolver=open_();
-         //main_hidtest();
+         main_hidtest();
         }
 
   } /* namespace prueba_seleccion */

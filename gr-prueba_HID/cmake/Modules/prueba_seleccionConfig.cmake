@@ -1,0 +1,30 @@
+INCLUDE(FindPkgConfig)
+PKG_CHECK_MODULES(PC_PRUEBA_SELECCION prueba_seleccion)
+
+FIND_PATH(
+    PRUEBA_SELECCION_INCLUDE_DIRS
+    NAMES prueba_seleccion/api.h
+    HINTS $ENV{PRUEBA_SELECCION_DIR}/include
+        ${PC_PRUEBA_SELECCION_INCLUDEDIR}
+    PATHS ${CMAKE_INSTALL_PREFIX}/include
+          /usr/local/include
+          /usr/include
+)
+
+FIND_LIBRARY(
+    PRUEBA_SELECCION_LIBRARIES
+    NAMES gnuradio-prueba_seleccion
+    HINTS $ENV{PRUEBA_SELECCION_DIR}/lib
+        ${PC_PRUEBA_SELECCION_LIBDIR}
+    PATHS ${CMAKE_INSTALL_PREFIX}/lib
+          ${CMAKE_INSTALL_PREFIX}/lib64
+          /usr/local/lib
+          /usr/local/lib64
+          /usr/lib
+          /usr/lib64
+)
+
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(PRUEBA_SELECCION DEFAULT_MSG PRUEBA_SELECCION_LIBRARIES PRUEBA_SELECCION_INCLUDE_DIRS)
+MARK_AS_ADVANCED(PRUEBA_SELECCION_LIBRARIES PRUEBA_SELECCION_INCLUDE_DIRS)
+

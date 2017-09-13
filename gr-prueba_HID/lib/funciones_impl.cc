@@ -39,8 +39,11 @@
     #include <unistd.h>
 #endif
 
-#define FCDPROPLUS_VENDOR_ID    0x04f2
-#define FCDPROPLUS_PRODUCT_ID   0x1055
+// parametros del dispositivo HID quacho
+#define FCDPROPLUS_VENDOR_ID    0x03eb
+#define FCDPROPLUS_PRODUCT_ID   0x2402
+
+
 
 namespace gr {
   namespace prueba_seleccion {
@@ -60,19 +63,8 @@ namespace gr {
               gr::io_signature::make(0, 0, 0)),
       seleccion_(seleccion)
       
-    {
-     //
-
-        //handle =NULL;
-       // hid_init();
-
-    int res;
-    unsigned char buf[9];// 1 extra byte for the report ID
-    #define MAX_STR 255
-    wchar_t wstr[MAX_STR];
- 
-    //struct hid_device_info *devs, *cur_dev;
-    
+    { 
+    // BUsqueda y visualizacion de dispositivos HID conectados al equipo    
     devs = hid_enumerate(0x0, 0x0);
     cur_dev = devs; 
     while (cur_dev) {
@@ -91,11 +83,84 @@ namespace gr {
     memset(buf,0x00,sizeof(buf));
     buf[0] = 0x01;
     buf[1] = 0x81;
+
+    // inicializacion del dispositivo HID esperado segun VENDOR_ID y PRODUCT_ID
     handle=hid_open( FCDPROPLUS_VENDOR_ID ,FCDPROPLUS_PRODUCT_ID, NULL);
         if(handle == NULL )
               printf("no se encuentra dispositivo HID");
         else
               printf("dispositivo encontrado...");
+
+    
+    // Read the Manufacturer String
+    wstr[0] = 0x0000;
+    res = hid_get_manufacturer_string(handle, wstr, MAX_STR);
+    if (res < 0)
+        printf("Unable to read manufacturer string\n");
+    printf("Manufacturer String: %ls\n", wstr);
+ 
+    // Read the Product String
+    wstr[0] = 0x0000;
+    res = hid_get_product_string(handle, wstr, MAX_STR);
+    if (res < 0)
+        printf("Unable to read product string\n");
+    printf("Product String: %ls\n", wstr);
+ 
+    // Read the Serial Number String
+    wstr[0] = 0x0000;
+    res = hid_get_serial_number_string(handle, wstr, MAX_STR);
+    if (res < 0)
+        printf("Unable to read serial number string\n");
+    printf("Serial Number String: (%d) %ls", wstr[0], wstr);
+    printf("\n");
+ 
+    // Read Indexed String 1
+    wstr[0] = 0x0000;
+    res = hid_get_indexed_string(handle, 1, wstr, MAX_STR);
+    if (res < 0)
+        printf("Unable to read indexed string 1\n");
+    printf("Indexed String 1: %ls\n", wstr);
+ 
+    // Set the hid_read() function to be non-blocking.
+    hid_set_nonblocking(handle, 1);
+ 
+    // send and receive 20 reports
+    for (int r = 0; r < 20; r++) {
+        // send some dummy data
+        buf[0] = 0x0; //report number
+//        for (i = 1; i < sizeof(buf); i++) {
+//            buf[i] = r + i;
+//        }
+ 
+//        res = hid_write(handle, buf, sizeof(buf));
+//        if (res < 0) {
+//            printf("Unable to write()\n");
+//            printf("Error: %ls\n", hid_error(handle));
+//        }S
+ 
+        // Read requested state. hid_read() has been set to be
+        // non-blocking by the call to hid_set_nonblocking() above.
+        // This loop demonstrates the non-blocking nature of hid_read().
+        res = 0;
+        while (res == 0) {
+            res = hid_read(handle, buf, sizeof(buf));
+            if (res == 0)
+                printf("waiting...\n");
+            if (res < 0)
+                printf("Unable to read()\n");
+            #ifdef WIN32
+            Sleep(500);
+            #else
+            usleep(500*1000);
+            #endif
+        }
+ 
+        printf("Data read:\n   ");
+        // Print out the returned buffer.
+        for (i = 0; i < res; i++)
+            printf("%02hhx ", buf[i]);
+        printf("\n");
+      }
     };
 
     /*
@@ -105,20 +170,33 @@ namespace gr {
     {
     };
 
-// funcion que abre el puerto serial
+// funcion para enviar-recibir datos de dispositivo HID
   float
   funciones_impl::open_(void)
   {
-   
+ 
+   res = 0;
+        while (res == 0) {
+            res = hid_read(handle, buf, sizeof(buf));
+            if (res == 0)
+                printf("waiting...\n");
+            if (res < 0)
+                printf("Unable to read()\n");
+
+            usleep(5000);
+
+        }
+ 
+        printf("Data read:\n   ");
+        // Print out the returned buffer.
+        for (i = 0; i < res; i++)
+            printf("%02hhx ", buf[i]);
+        printf("\n");
    return 1;
 
    };
 
-
-
-
 //------------------------------------------------------------------------------------
-
 
     void
     funciones_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)

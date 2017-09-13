@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Prueba Serial
-# Generated: Wed Sep 13 13:42:56 2017
+# Generated: Wed Sep 13 18:04:12 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -63,12 +63,14 @@ class prueba_serial(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
         self.prueba_seleccion_funciones_0 = prueba_seleccion.funciones(1)
+        self.blocks_throttle_0 = blocks.throttle(gr.sizeof_float*1, samp_rate,True)
         self.blocks_null_source_0 = blocks.null_source(gr.sizeof_float*1)
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.blocks_null_source_0, 0), (self.prueba_seleccion_funciones_0, 0))
+        self.connect((self.blocks_null_source_0, 0), (self.blocks_throttle_0, 0))
+        self.connect((self.blocks_throttle_0, 0), (self.prueba_seleccion_funciones_0, 0))
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "prueba_serial")
@@ -80,6 +82,7 @@ class prueba_serial(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
+        self.blocks_throttle_0.set_sample_rate(self.samp_rate)
 
 
 def main(top_block_cls=prueba_serial, options=None):

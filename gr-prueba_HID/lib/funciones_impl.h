@@ -23,6 +23,7 @@
 
 #include <prueba_seleccion/funciones.h>
 #include "hidapi.h"
+#include <wchar.h>
 
 namespace gr {
   namespace prueba_seleccion {
@@ -32,7 +33,14 @@ namespace gr {
      private:
       float seleccion_; // valor que se importa desde el GUI de GNURADIO
       int fd;
+
+      // variables usadas exclusivamente para HID
       hid_device *handle; // agregado
+      int res;
+      unsigned char buf[9];// 1 extra byte for the report ID
+      #define MAX_STR 255
+      wchar_t wstr[MAX_STR];
+      int i;
        
 
      public:

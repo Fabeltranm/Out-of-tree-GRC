@@ -1,0 +1,10 @@
+# Para que funcione correctamente la conexion entre GNURadio y Quacho-board es
+# necesario actualizar las UDEV Rules
+
+# realizar el siguiente paso a paso
+
+# 1. copiar el archivo quacho.rules a la carpeta /etc/udev/rules.d
+# sudo cp quacho.rules /etc/udev/rules.d
+
+# 2. actualizar las UDEV-Rules desde la terminal de linux
+# sudo udevadm control --reload-rules

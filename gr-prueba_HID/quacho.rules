@@ -1,0 +1,5 @@
+#QUACHO-UDEV-RULES
+
+SUBSYSTEMS=="usb", ATTRS{Manufacturer}=="UNIV. ECCI", ATTRS{Product}=="QUACHO", MODE:="0666"
+
+

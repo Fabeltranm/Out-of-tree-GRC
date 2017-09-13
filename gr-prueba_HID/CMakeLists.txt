@@ -131,6 +131,18 @@ if(NOT CPPUNIT_FOUND)
     message(FATAL_ERROR "CppUnit required to compile prueba_seleccion")
 endif()
 
+
+# cambio en el archivo original, para buscar HIDAPI 12/9/2017
+FIND_LIBRARY(HIDAPI_LIBRARY hidapi-libusb)
+if(HIDAPI_LIBRARY)
+      MESSAGE(STATUS "system Hidapi found in:  ${HIDAPI_LIBRARY} is used")
+else()
+      MESSAGE(STATUS "Bundled")
+endif()
+
+# fin de cambio  12/9/2017
+
+
 ########################################################################
 # Setup doxygen option
 ########################################################################

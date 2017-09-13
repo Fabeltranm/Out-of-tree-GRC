@@ -17,8 +17,5 @@
     <type>float</type>
   </sink>
 
-  <source>
-    <name>out</name>
-    <type>float</type>
-  </source>
+
 </block>

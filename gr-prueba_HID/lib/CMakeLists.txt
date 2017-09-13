@@ -29,6 +29,16 @@ list(APPEND prueba_seleccion_sources
     funciones_impl.cc
 )
 
+#//////////////////////////////////////////////////////////////////////////////////////////////
+# inclusion para pruebas de HID
+
+list(APPEND prueba_seleccion_libs ${LIBUSB_LIBRARIES})
+list(APPEND prueba_seleccion_libs ${HIDAPI_LIBRARY})
+#set_target_properties(gnuradio-prueba_seleccion PROPERTIES COMPILE_DEFINITIONS "SYSTEM_HIDAPI")
+
+
+#----------------------------------------------------------------------------------------------
+
 set(prueba_seleccion_sources "${prueba_seleccion_sources}" PARENT_SCOPE)
 if(NOT prueba_seleccion_sources)
 	MESSAGE(STATUS "No C++ sources... skipping lib/")
@@ -36,7 +46,11 @@ if(NOT prueba_seleccion_sources)
 endif(NOT prueba_seleccion_sources)
 
 add_library(gnuradio-prueba_seleccion SHARED ${prueba_seleccion_sources})
-target_link_libraries(gnuradio-prueba_seleccion ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES})
+target_link_libraries(gnuradio-prueba_seleccion ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES}
+                                                ${prueba_seleccion_libs} ${GNURADIO_RUNTIME_LIBRARIES}
+                                                ${GNURADIO_BLOCK_LIBRARIES} ${GNURADIO_PMT_LIBRARIES}
+                      
+                     )
 set_target_properties(gnuradio-prueba_seleccion PROPERTIES DEFINE_SYMBOL "gnuradio_prueba_seleccion_EXPORTS")
 
 if(APPLE)
@@ -63,6 +77,7 @@ list(APPEND test_prueba_seleccion_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_prueba_seleccion.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_funciones.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/hidtest.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/hid.c
 
 )
 
@@ -75,6 +90,7 @@ target_link_libraries(
   ${CPPUNIT_LIBRARIES}
   gnuradio-prueba_seleccion
   hidapi-hidraw 
+  udev
 )
 
 GR_ADD_TEST(test_prueba_seleccion test-prueba_seleccion)

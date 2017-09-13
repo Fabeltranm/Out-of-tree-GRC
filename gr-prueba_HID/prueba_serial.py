@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Prueba Serial
-# Generated: Tue Sep  5 19:13:23 2017
+# Generated: Wed Sep 13 13:42:56 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -25,6 +25,7 @@ from gnuradio.filter import firdes
 from optparse import OptionParser
 import prueba_seleccion
 import sys
+from gnuradio import qtgui
 
 
 class prueba_serial(gr.top_block, Qt.QWidget):
@@ -33,6 +34,7 @@ class prueba_serial(gr.top_block, Qt.QWidget):
         gr.top_block.__init__(self, "Prueba Serial")
         Qt.QWidget.__init__(self)
         self.setWindowTitle("Prueba Serial")
+        qtgui.util.check_set_qss()
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
         except:
@@ -60,15 +62,13 @@ class prueba_serial(gr.top_block, Qt.QWidget):
         ##################################################
         # Blocks
         ##################################################
-        self.prueba_seleccion_funciones_0 = prueba_seleccion.funciones(0)
+        self.prueba_seleccion_funciones_0 = prueba_seleccion.funciones(1)
         self.blocks_null_source_0 = blocks.null_source(gr.sizeof_float*1)
-        self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_float*1)
 
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.blocks_null_source_0, 0), (self.prueba_seleccion_funciones_0, 0))    
-        self.connect((self.prueba_seleccion_funciones_0, 0), (self.blocks_null_sink_0, 0))    
+        self.connect((self.blocks_null_source_0, 0), (self.prueba_seleccion_funciones_0, 0))
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "prueba_serial")

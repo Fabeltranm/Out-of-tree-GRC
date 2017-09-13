@@ -33,10 +33,10 @@ namespace gr {
       float seleccion_; // valor que se importa desde el GUI de GNURADIO
       int fd;
       hid_device *handle; // agregado
-      // Nothing to declare in this block.
+       
 
      public:
-      
+      struct hid_device_info *devs, *cur_dev;
       funciones_impl(float seleccion);
       ~funciones_impl();
 

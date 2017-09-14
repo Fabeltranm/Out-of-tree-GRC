@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Prueba Serial
-# Generated: Wed Sep 13 18:04:12 2017
+# Generated: Thu Sep 14 18:14:54 2017
 ##################################################
 
 if __name__ == '__main__':

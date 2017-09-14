@@ -12,10 +12,10 @@
     <type>float</type>
   </param>
 
-  <sink>
-    <name>in</name>
+  <source>
+    <name>out</name>
     <type>float</type>
-  </sink>
+  </source>
 
 
 </block>

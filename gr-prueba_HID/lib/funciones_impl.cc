@@ -26,12 +26,12 @@
 
 #include <gnuradio/io_signature.h>
 #include "funciones_impl.h"
-// funciones para el uso del puerto serial 
+// funciones para el uso de HID 
 #include <stdio.h>
-#include <wchar.h>
-#include <string.h>
-#include <stdlib.h>
-#include "hidapi.h"
+//#include <wchar.h>
+//#include <string.h>
+//#include <stdlib.h>
+//#include "hidapi.h"
 // Headers needed for sleeping.
 #ifdef _WIN32
     #include <windows.h>
@@ -105,20 +105,13 @@ namespace gr {
   funciones_impl::open_(void)
   {
    
-   res = 0;
+        res = 0;
         while (res == 0) {
             res = hid_read(handle, buf, sizeof(buf));
             if (res == 0)
                 printf("waiting...\n");
             if (res < 0)
                 printf("Unable to read()\n");
-            /*#ifdef WIN32
-            Sleep(500);
-            #else
-            usleep(5000);
-            #endif*/
-        
-
         }
  
         //printf("Data read:\n   ");
@@ -129,13 +122,7 @@ namespace gr {
    return 1;
 
    };
-
-
-
-
 //------------------------------------------------------------------------------------
-
-
     void
     funciones_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
     {
@@ -156,9 +143,10 @@ namespace gr {
             res = hid_read(handle, buf, sizeof(buf));
             if (res == 0)
                 printf("waiting...\n");
-            if (res < 0)
+            if (res < 0){
                 printf("Unable to read()\n");
-        
+                return 0;
+                }
         }
  
         //printf("Data read:\n   ");
@@ -168,14 +156,14 @@ namespace gr {
       // Do <+signal processing+>
       // Tell runtime system how many input items we consumed on
       // each input stream.
-      
+      /*
       for(int i=0;i<noutput_items;i++)
           {
-             
-                
-          }	
+                 
+          }
+       */	
       consume_each (noutput_items);
-
+      
       // Tell runtime system how many output items we produced.
       return noutput_items;
     }
